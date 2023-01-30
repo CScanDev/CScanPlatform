@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "drf_yasg",
 
-    "components.parsers",
-    "components.dashboard",
+    "parsers",
+    "dashboard",
 ]
 
 MIDDLEWARE = [
@@ -133,3 +135,8 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Selenium
+SELENIUM_DRIVER_PATH = os.path.join(BASE_DIR, "../selenium_web_drivers/")
+HTML_PARSER = "lxml"
