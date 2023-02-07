@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser
+from rest_framework import permissions
 
 import services
 from parsers import models
@@ -18,7 +18,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
 
 class SearchView(viewsets.ViewSet):
-    permission_classes = (IsAdminUser,)
+    permission_classes = (permissions.AllowAny,)
 
     @action(methods=["GET"], detail=False, url_path="search/(?P<query>[^/.]+)")
     def search(self, request: Request, query=None) -> Response:
