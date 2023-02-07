@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 from collections import defaultdict
 import os
 import json
@@ -19,8 +19,13 @@ class SearchEngine:
     def __init__(self):
         self.lemmatizer = pymorphy2.MorphAnalyzer()
 
-    def search(self, query: str) -> Union[QuerySet, List[models.Course]]:
-        index = self._get_index()
+    def search(self, query: str) -> Optional[Union[QuerySet, List[models.Course]]]:
+        try:
+            index = self._get_index()
+        except FileNotFoundError:
+            print("No index file")
+            return []
+
         ids = []
         for word in self._tokenize(query):
             ids.extend(index.get(word, []))

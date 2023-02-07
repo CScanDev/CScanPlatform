@@ -76,6 +76,8 @@ class Course(models.Model):
     updated = models.DateTimeField("Last update", auto_now=True)
     is_active = models.BooleanField("Is active?", default=False)
 
+    def __str__(self):
+        return f"{self.source.name}: {self.title}"
 
 
 

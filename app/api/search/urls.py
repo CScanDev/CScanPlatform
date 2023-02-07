@@ -1,9 +1,7 @@
 from rest_framework.routers import DefaultRouter
 
-from main.views import MainView
+from api.search.views import SearchView
 
 router = DefaultRouter()
-router.register("", MainView, basename="main")
+router.register("", SearchView, basename="main")
 urlpatterns = router.urls
-
-
