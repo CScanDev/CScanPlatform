@@ -63,7 +63,6 @@ class Tag(models.Model):
 
 
 class Course(models.Model):
-
     title = models.CharField("Title", max_length=255)
     link = models.CharField("Link to buy", max_length=255, unique=True)
     price = models.DecimalField("Price", default=Decimal(0), decimal_places=2, max_digits=10)
@@ -79,6 +78,4 @@ class Course(models.Model):
 
     def __str__(self):
         return f"{self.source.name}: {self.title}"
-
-
 

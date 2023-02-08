@@ -29,3 +29,8 @@ class SearchView(viewsets.ViewSet):
                 many=True
             ).data
         )
+
+
+class TestView(viewsets.ViewSet):
+    def list(self, request):
+        return Response("Test")
