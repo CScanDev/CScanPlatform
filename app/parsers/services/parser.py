@@ -7,6 +7,7 @@ from django.conf import settings
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from bs4.element import Tag as _Tag
@@ -36,7 +37,12 @@ class Parser:
         self.config = config
 
     def _get_page(self) -> Optional[HTML]:
-        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+        options = Options()
+        options.headless = True
+        browser = webdriver.Chrome(
+            service=Service(ChromeDriverManager().install()),
+            options=options
+        )
         try:
             browser.get(self.config.content_link)
             time.sleep(randint(3, 6))

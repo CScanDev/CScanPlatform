@@ -13,8 +13,8 @@ from parsers import models
 
 
 class SearchEngine:
-    index_file_name = "index.json"
-    index_path = os.path.join(settings.BASE_DIR, f"../{index_file_name}")
+    INDEX_FILE_NAME = "index.json"
+    INDEX_PATH = os.path.join(settings.BASE_DIR, f"../{INDEX_FILE_NAME}")
 
     def __init__(self):
         self.lemmatizer = pymorphy2.MorphAnalyzer()
@@ -38,12 +38,12 @@ class SearchEngine:
             for token in self._tokenize(course.title):
                 index[token].append(course.pk)
 
-        with open(self.index_path, "w") as file:
+        with open(self.INDEX_PATH, "w", encoding="utf-8") as file:
             data = json.dumps(index, ensure_ascii=False)
             file.write(data)
 
     def _get_index(self) -> dict:
-        with open(self.index_path, "r") as file:
+        with open(self.INDEX_PATH, "r", encoding="utf-8") as file:
             data = json.load(file)
             return data
 
