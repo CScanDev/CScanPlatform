@@ -1,22 +1,57 @@
-import time
-from typing import List, Optional
-from random import randint
 import re
+import sys
+import time
+from random import randint
+from typing import List, Optional
 
 from django.conf import settings
 
+from bs4 import BeautifulSoup
+from bs4.element import Tag as _Tag
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
-from bs4.element import Tag as _Tag
 
 from parsers.services.exceptions import *
 from parsers import models
 
 
 HTML = str
+
+
+class WindowsChromeWebDriver:
+    driver_location = "../web_drivers/windows/chromedriver.exe"
+    # binary_location = "../web_drivers/windows/chromedriver.exe"
+
+    @classmethod
+    def get(cls):
+        options = Options()
+        # options.binary_location = cls.binary_location
+        options.headless = True
+
+        return webdriver.Chrome(
+            executable_path=cls.driver_location,
+            options=options
+        )
+
+
+class LinuxChromeWebDriver:
+    driver_location = "../web_drivers/linux/chromedriver"
+    # binary_location = "../web_drivers/windows/chromedriver.exe"
+
+    @classmethod
+    def get(cls):
+        options = Options()
+        # options.binary_location = cls.binary_location
+        options.headless = True
+
+        return webdriver.Chrome(
+            executable_path=cls.driver_location,
+            options=options
+        )
+
+
+Browser = LinuxChromeWebDriver if "linux" in sys.platform else WindowsChromeWebDriver
 
 
 class Parser:
@@ -37,12 +72,7 @@ class Parser:
         self.config = config
 
     def _get_page(self) -> Optional[HTML]:
-        options = Options()
-        options.headless = True
-        browser = webdriver.Chrome(
-            service=Service(ChromeDriverManager().install()),
-            options=options
-        )
+        browser = Browser.get()
         try:
             browser.get(self.config.content_link)
             time.sleep(randint(3, 6))
