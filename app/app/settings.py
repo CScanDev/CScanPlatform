@@ -30,8 +30,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['79.174.12.145', '127.0.0.1', 'cscan.ru']
 
 # Application definition
 
@@ -130,12 +129,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
 
 # Selenium
 SELENIUM_DRIVER_PATH = os.path.join(BASE_DIR, "../selenium_web_drivers/")
