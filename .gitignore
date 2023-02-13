@@ -2,6 +2,7 @@
 /.idea/
 /db/
 __pycache__/
+static/
 
 .env
 
