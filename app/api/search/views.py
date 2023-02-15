@@ -4,9 +4,18 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import permissions
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 
 import services
 from parsers import models
+
+
+query = openapi.Parameter(
+    "query", openapi.IN_QUERY,
+    required=True, type=openapi.TYPE_STRING
+)
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -20,12 +29,15 @@ class CourseSerializer(serializers.ModelSerializer):
 class SearchView(viewsets.ViewSet):
     permission_classes = (permissions.AllowAny,)
 
-    @action(methods=["GET"], detail=False, url_path="search/(?P<query>[^/.]+)")
-    def search(self, request: Request, query=None) -> Response:
+    @swagger_auto_schema(manual_parameters=[query])
+    @action(methods=["GET"], detail=False)
+    def search(self, request: Request) -> Response:
         engine = services.SearchEngine()
         return Response(
             CourseSerializer(
-                instance=engine.search(query),
+                instance=engine.search(
+                    request.GET.get(query.name, None)
+                ),
                 many=True
             ).data
         )
