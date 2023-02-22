@@ -3,6 +3,7 @@
 /db/
 __pycache__/
 static/
+web_drivers/
 
 .env
 
