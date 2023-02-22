@@ -9,7 +9,6 @@ from django.conf import settings
 from bs4 import BeautifulSoup
 from bs4.element import Tag as _Tag
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 from parsers.services.exceptions import *
@@ -19,39 +18,30 @@ from parsers import models
 HTML = str
 
 
-class WindowsChromeWebDriver:
-    driver_location = "../web_drivers/windows/chromedriver.exe"
-    # binary_location = "../web_drivers/windows/chromedriver.exe"
+class ChromeWebDriver:
 
-    @classmethod
-    def get(cls):
+    def __init__(self):
+        self.driver_location = None
+        self.binary_location = None
+        self._set_path_parameters()
+
+    def _set_path_parameters(self):
+        if "linux" in sys.platform:
+            self.driver_location = "../web_drivers/linux/chromedriver"
+            self.binary_location = "~/chrome/chrome"
+        else:
+            self.driver_location = "../web_drivers/windows/chromedriver.exe"
+
+    def get_browser(self) -> webdriver.Chrome:
         options = Options()
-        # options.binary_location = cls.binary_location
         options.headless = True
+        if self.binary_location:
+            options.binary_location = self.binary_location
 
         return webdriver.Chrome(
-            executable_path=cls.driver_location,
+            executable_path=self.driver_location,
             options=options
         )
-
-
-class LinuxChromeWebDriver:
-    driver_location = "../web_drivers/linux/chromedriver"
-    # binary_location = "../web_drivers/windows/chromedriver.exe"
-
-    @classmethod
-    def get(cls):
-        options = Options()
-        # options.binary_location = cls.binary_location
-        options.headless = True
-
-        return webdriver.Chrome(
-            executable_path=cls.driver_location,
-            options=options
-        )
-
-
-Browser = LinuxChromeWebDriver if "linux" in sys.platform else WindowsChromeWebDriver
 
 
 class Parser:
@@ -72,7 +62,7 @@ class Parser:
         self.config = config
 
     def _get_page(self) -> Optional[HTML]:
-        browser = Browser.get()
+        browser = ChromeWebDriver().get_browser()
         try:
             browser.get(self.config.content_link)
             time.sleep(randint(3, 6))
