@@ -28,7 +28,7 @@ class ChromeWebDriver:
     def _set_path_parameters(self):
         if "linux" in sys.platform:
             self.driver_location = "/usr/local/bin/chromedriver"
-            self.binary_location = "~/chrome/"
+            self.binary_location = "~/chrome/chrome"
         else:
             self.driver_location = "../web_drivers/windows/chromedriver.exe"
 
