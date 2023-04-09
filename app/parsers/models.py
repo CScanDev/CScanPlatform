@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -7,6 +8,8 @@ class Source(models.Model):
     name = models.CharField("Name", max_length=64, unique=True)
     link = models.URLField("Link", max_length=256)
     is_active = models.BooleanField("Is active?", default=False)
+
+    manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self) -> str:
         return f"{self.name} - {self.link}"

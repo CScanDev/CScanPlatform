@@ -1,4 +1,3 @@
-from rest_framework import viewsets
 from rest_framework import serializers
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -7,6 +6,7 @@ from rest_framework import permissions
 
 import services
 from parsers import models
+from api.base import BaseViewSet
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class CourseSerializer(serializers.ModelSerializer):
         )
 
 
-class SearchView(viewsets.ViewSet):
+class SearchView(BaseViewSet):
     permission_classes = (permissions.AllowAny,)
 
     @action(methods=["GET"], detail=False, url_path="search/(?P<query>[^/.]+)")
@@ -29,8 +29,3 @@ class SearchView(viewsets.ViewSet):
                 many=True
             ).data
         )
-
-
-class TestView(viewsets.ViewSet):
-    def list(self, request):
-        return Response("Test")

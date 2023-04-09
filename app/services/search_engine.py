@@ -15,9 +15,7 @@ from parsers import models
 class SearchEngine:
     INDEX_FILE_NAME = "index.json"
     INDEX_PATH = os.path.join(settings.BASE_DIR, f"../{INDEX_FILE_NAME}")
-
-    def __init__(self):
-        self.lemmatizer = pymorphy2.MorphAnalyzer()
+    LEMMATIZER = pymorphy2.MorphAnalyzer()
 
     def search(self, query: str) -> Optional[Union[QuerySet, List[models.Course]]]:
         try:
@@ -31,14 +29,15 @@ class SearchEngine:
             ids.extend(index.get(word, []))
         return models.Course.objects.filter(id__in=ids)
 
-    def build_index(self):
+    @classmethod
+    def build_index(cls):
         index = defaultdict(list)
         courses = models.Course.objects.all()
         for course in courses:
-            for token in self._tokenize(course.title):
+            for token in cls._tokenize(course.title):
                 index[token].append(course.pk)
 
-        with open(self.INDEX_PATH, "w", encoding="utf-8") as file:
+        with open(cls.INDEX_PATH, "w", encoding="utf-8") as file:
             data = json.dumps(index, ensure_ascii=False)
             file.write(data)
 
@@ -47,10 +46,12 @@ class SearchEngine:
             data = json.load(file)
             return data
 
-    def _tokenize(self, text: str) -> List[str]:
+    @classmethod
+    def _tokenize(cls, text: str) -> List[str]:
         return [
-            self._lemmatize(word) for word in word_tokenize(text) if word not in stopwords.words("russian")
+            cls._lemmatize(word) for word in word_tokenize(text) if word not in stopwords.words("russian")
         ]
 
-    def _lemmatize(self, word: str) -> str:
-        return self.lemmatizer.parse(word)[0].normal_form
+    @classmethod
+    def _lemmatize(cls, word: str) -> str:
+        return cls.LEMMATIZER.parse(word)[0].normal_form

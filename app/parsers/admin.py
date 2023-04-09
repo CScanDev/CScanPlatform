@@ -11,7 +11,7 @@ from parsers.services import Parser
 def run_parser(modeladmin, request, queryset: Union[QuerySet, List[models.Source]]):
     for source in queryset:
         parser = Parser(source)
-        parser.parse()
+        parser.parse(update_index=True)
 
 
 class SourceAdmin(admin.ModelAdmin):
@@ -32,7 +32,7 @@ class ConfigAdmin(admin.ModelAdmin):
 
 
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ("title", "source", "updated", "is_active",)
+    list_display = ("title", "link", "updated", "is_active",)
     list_editable = ("is_active",)
 
 
